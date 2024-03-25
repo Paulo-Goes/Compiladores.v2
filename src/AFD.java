@@ -1,5 +1,4 @@
-package compiladores;
-import java.util.HashMap;
+/*import java.util.HashMap;
 import java.util.Map;
 public class AFD {
     private Map<State, Token.tipoToken> mapa;
@@ -35,7 +34,7 @@ public class AFD {
                 return (entry >= 'A' && entry <= 'Z')
                         || (entry >= 'a' && entry <= 'z')
                         || (entry >= '0' && entry <= '9')
-                        ? State.Q1 : State.INVALIDATION_STATE;
+                        ? State.Q1 : State.ERRO;
             }
 
             case Q2: {
@@ -48,20 +47,20 @@ public class AFD {
                 else if (entry >= '0' && entry <= '9')
                     return State.Q4;
                 else
-                    return State.INVALIDATION_STATE;
+                    return State.ERRO;
             }
 
             case Q5: {
-                return (entry >= '0' && entry <= '9') ? State.Q4 : State.INVALIDATION_STATE;
+                return (entry >= '0' && entry <= '9') ? State.Q4 : State.ERRO;
             }
             case Q6:
 
             case Q7: {
-                return (entry >= '0' && entry <= '9') ? State.Q7 : State.INVALIDATION_STATE;
+                return (entry >= '0' && entry <= '9') ? State.Q7 : State.ERRO;
             }
 
             default:
-                return State.INVALIDATION_STATE;
+                return State.ERRO;
         }
     }
 
@@ -73,3 +72,4 @@ public class AFD {
         return finalStates.getOrDefault(state, Token.INVALID);
     }
 }
+*/

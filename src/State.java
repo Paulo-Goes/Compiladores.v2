@@ -1,5 +1,3 @@
-package compiladores;
-
 public enum State {
         INITIAL, 
         Q1,

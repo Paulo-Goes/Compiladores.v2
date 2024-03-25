@@ -1,15 +1,11 @@
-testes testess testesss
-testes2 testess2   testesss3
+public class Main{
+    public static void main(String[] args){
+        int a = 5;
+        int b = 10;
+        String s = "teste"
 
+        int c = a + b;
 
-
-
-
-eeeeeeeeeeeeee
-
-aaaaaaaaaaaaa
-
-bbbbbbbbbbbbbb
-
-
-chgfhdftdrh
+        s = "aux"
+    }
+}
