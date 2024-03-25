@@ -37,7 +37,7 @@ public class Compilador {
                 listaSimbolos.add(token);
             } else {
                 token = new Token(Token.tipoToken.INVALIDO, lexema);
-
+                listaToken.add(token);
             }
         }
         File desktop = new File(FileSystemView.getFileSystemView().getHomeDirectory().toString());
@@ -56,11 +56,11 @@ public class Compilador {
         writerSimbolo.write("Simbolos");
 
         for (Token token : listaToken) {
-            writerToken.write(String.valueOf(token));
+            writerToken.write(String.valueOf(token) + "\n");
         }
 
         for (Token listaSimbolo : listaSimbolos) {
-            writerSimbolo.write(String.valueOf(listaSimbolo));
+            writerSimbolo.write(String.valueOf(listaSimbolo) + "\n");
         }
 
         writerToken.close();
