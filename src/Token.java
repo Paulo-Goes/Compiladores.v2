@@ -1,4 +1,3 @@
-package compiladores;
 public class Token {
     private tipoToken tipo;
     private String lexema;
@@ -16,7 +15,8 @@ public class Token {
         TXT,
         OPERADOR,
         SIMBOLO_ESPECIAL,
-        COMENTARIO
+        COMENTARIO,
+        INVALIDO
     }
 
     @Override
