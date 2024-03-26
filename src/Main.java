@@ -26,7 +26,11 @@ public class Main {
 
                 if (abreAspas || abreApostrofe) {
                     if (linha.charAt(i) == '"' || linha.charAt(i) == '\'') {
-                        listaString.add(Character.toString(linha.charAt(i)));
+                        if(palavra == null){
+                            listaString.add(Character.toString(linha.charAt(i)));
+                        } else{
+                            palavra.append(linha.charAt(i));
+                        }
                     } else {
                         if (palavra == null) {
                             palavra = new StringBuilder();
