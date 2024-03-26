@@ -6,15 +6,15 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-public class Compilador {
+public class compilador {
 
-    public void identificador(ArrayList<String> lista) throws IOException { //recebe uma lista de lexemas
+    public void identificador(ArrayList<String> lista) throws IOException {
         ArrayList<Token> listaSimbolos = new ArrayList<>();
         ArrayList<Token> listaToken = new ArrayList<>();
 
         for (String lexema : lista) {
             Token token;
-            if (lexema.matches("\\b(abstract|assert|boolean|break|byte|case|catch|char|class|const|continue|default|do|double|else|enum|extends|final|finally|float|for|goto|if|implements|import|instanceof|int|interface|long|native|new|null|package|private|protected|public|return|short|static|strictfp|super|switch|synchronized|this|throw|throws|transient|try|void|volatile|while)\\b")) {
+            if (lexema.matches("\\b(abstract|assert|boolean|break|byte|case|catch|char|class|const|continue|default|do|double|else|enum|extends|final|finally|float|for|goto|if|implements|import|instanceof|int|interface|long|main|native|new|null|package|private|protected|println|public|return|scanf|short|static|strictfp|super|switch|synchronized|this|throw|throws|transient|try|void|volatile|while)\\b")) {
                 token = new Token(Token.tipoToken.KEYWORD, lexema);
                 listaSimbolos.add(token);
             } else if (lexema.matches("\\d+(\\.\\d+)?")) {
@@ -28,16 +28,15 @@ public class Compilador {
                 listaToken.add(token);
             } else if (lexema.matches(".*[+\\-*/%==!=<><=><&|!^+=\\-*/%<<>>>>>]=?")) {
                 token = new Token(Token.tipoToken.OPERADOR, lexema);
-                listaSimbolos.add(token);
+                listaToken.add(token);
             } else if (lexema.matches("//.*")) {
                 token = new Token(Token.tipoToken.COMENTARIO, lexema);
-                listaSimbolos.add(token);
+                listaToken.add(token);
             } else if (lexema.matches("[\\[\\]\\{\\}\\(\\),;]")) {
                 token = new Token(Token.tipoToken.SIMBOLO_ESPECIAL, lexema);
-                listaSimbolos.add(token);
+                listaToken.add(token);
             } else {
                 token = new Token(Token.tipoToken.INVALIDO, lexema);
-                listaToken.add(token);
             }
         }
         File desktop = new File(FileSystemView.getFileSystemView().getHomeDirectory().toString());
