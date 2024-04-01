@@ -8,7 +8,7 @@ import static java.lang.Character.*;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader("Codigo2"));
+        BufferedReader reader = new BufferedReader(new FileReader("Codigo"));
 
         ArrayList<String> listaString = new ArrayList<>();
 
@@ -43,7 +43,7 @@ public class Main {
                     palavra.append(linha.charAt(i));
                 } else {
                     // Se for operador
-                    if (!isDigit(linha.charAt(i)) && !isAlphabetic(linha.charAt(i)) && !isWhitespace(linha.charAt(i))) {
+                    if (!isDigit(linha.charAt(i)) && !isAlphabetic(linha.charAt(i)) && !isWhitespace(linha.charAt(i)) && linha.charAt(i) != '.') {
                         if (linha.charAt(i) != '"') {
                             if (palavra != null) {
                                 listaString.add(palavra.toString());

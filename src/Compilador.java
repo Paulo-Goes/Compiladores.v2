@@ -8,6 +8,18 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class Compilador {
+    private static void createFolder(File folder) {
+        if (!folder.exists()) {
+            boolean created = folder.mkdirs();
+            if (created) {
+                System.out.println("Pasta criada.");
+            } else {
+                System.err.println("Não foi possível criar a pasta.");
+            }
+        } else {
+            System.out.println("A pasta já existe.");
+        }
+    }
 
     public void identificador(ArrayList<String> lista) throws IOException {
         ArrayList<Token> listaSimbolos = new ArrayList<>();
@@ -29,18 +41,18 @@ public class Compilador {
                 token = new Token(Token.tipoToken.TXT, lexema);
                 listaSimbolos.add(token);
                 listaToken.add(token);
-            } else if (lexema.matches(".*[+\\-*/%==!=<><=><&|!^+=\\-*/%<<>>>>>]=?")) {
+            } else if (lexema.matches(".*[+\\-*/%=!<>&|^]=?")) {
                 token = new Token(Token.tipoToken.OPERADOR, lexema);
                 listaToken.add(token);
             } else if (lexema.matches("//.*")) {
                 token = new Token(Token.tipoToken.COMENTARIO, lexema);
                 listaToken.add(token);
-            } else if (lexema.matches("[\\[\\]\\{\\}\\(\\),;]")) {
+            } else if (lexema.matches("[\\[\\]{}(),;]")) {
                 token = new Token(Token.tipoToken.SIMBOLO_ESPECIAL, lexema);
                 listaToken.add(token);
             } else {
                 token = new Token(Token.tipoToken.INVALIDO, lexema);
-                throw new IllegalArgumentException(token + " não é um token aceito");
+                throw new IllegalArgumentException("[" + token + "]" + " não é um token aceito");
             }
         }
         File desktop = new File(FileSystemView.getFileSystemView().getHomeDirectory().toString());
@@ -59,27 +71,14 @@ public class Compilador {
         writerSimbolo.write("Simbolos\n\n");
 
         for (Token token : listaToken) {
-            writerToken.write(String.valueOf(token) + "\n");
+            writerToken.write(token + "\n");
         }
 
         for (Token listaSimbolo : listaSimbolos) {
-            writerSimbolo.write(String.valueOf(listaSimbolo) + "\n");
+            writerSimbolo.write(listaSimbolo + "\n");
         }
 
         writerToken.close();
         writerSimbolo.close();
-    }
-
-    private static void createFolder(File folder) {
-        if (!folder.exists()) {
-            boolean created = folder.mkdirs();
-            if (created) {
-                System.out.println("Pasta criada.");
-            } else {
-                System.err.println("Não foi possível criar a pasta.");
-            }
-        } else {
-            System.out.println("A pasta já existe.");
-        }
     }
 }
