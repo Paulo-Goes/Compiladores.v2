@@ -5,70 +5,145 @@ import java.util.ArrayList;
 
 import static java.lang.Character.*;
 
+/*Todo: Resolver problemas com comentários de várias linhas saindo como operador em vez de comentário
+*       Em CodigoProfessor, na linha 29, especificamente 'valores.length', o '.' não é reconhecido
+*/
+
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader("Codigo"));
+        BufferedReader reader = new BufferedReader(new FileReader("CodigoProfessor"));
 
         ArrayList<String> listaString = new ArrayList<>();
 
         String linha;
+        StringBuilder palavra = new StringBuilder();
+
         boolean abreAspas = false;
         boolean abreApostrofe = false;
+        boolean isNum = false;
+        boolean isSingleComment = false;
+        boolean isMultiComment = false;
+        boolean isReserved = false;
+        boolean checkComment = false;
+        boolean checkEndComment = false;
 
         while ((linha = reader.readLine()) != null) {
-
-            StringBuilder palavra = null;
+            if (isSingleComment) {
+                listaString.add(palavra.toString());
+                palavra = new StringBuilder();
+                isSingleComment = false;
+            }
 
             for (int i = 0; i < linha.length(); i++) {
-                if (linha.charAt(i) == '"' && !abreApostrofe) {
-                    abreAspas = !abreAspas;
-                    if (!abreAspas) {
-                        palavra.append(linha.charAt(i));
-                        listaString.add(palavra.toString());
-                        palavra = null;
-                    }
-                } else if (linha.charAt(i) == '\'' && !abreAspas) {
-                    abreApostrofe = !abreApostrofe;
-                    if (!abreApostrofe) {
-                        listaString.add(palavra.toString());
-                        palavra = null;
-                    }
-                }
+                char c = linha.charAt(i);
 
                 if (abreAspas || abreApostrofe) {
-                    if (palavra == null) {
+                    palavra.append(c);
+                } else if (isNum) {
+                    if (isDigit(c) || c == '.') {
+                        palavra.append(c);
+                    } else {
+                        listaString.add(palavra.toString());
                         palavra = new StringBuilder();
+                        isNum = false;
                     }
-                    palavra.append(linha.charAt(i));
-                } else {
-                    // Se for operador
-                    if (!isDigit(linha.charAt(i)) && !isAlphabetic(linha.charAt(i)) && !isWhitespace(linha.charAt(i)) && linha.charAt(i) != '.') {
-                        if (linha.charAt(i) != '"') {
-                            if (palavra != null) {
-                                listaString.add(palavra.toString());
-                                palavra = null;
-                            }
-                            listaString.add(Character.toString(linha.charAt(i)));
+                } else if (isReserved) {
+                    if (isDigit(c) || isAlphabetic(c)) {
+                        palavra.append(c);
+                    } else {
+                        listaString.add(palavra.toString());
+                        palavra = new StringBuilder();
+                        isReserved = false;
+                    }
+                } else if (isSingleComment) {
+                    palavra.append(c);
+                } else if (isMultiComment) {
+                    palavra.append(c);
+                    if (checkEndComment) {
+                        if (c == '/') {
+                            listaString.add(palavra.toString());
+                            palavra = new StringBuilder();
+                            isMultiComment = false;
                         }
-                    } else if (!isWhitespace(linha.charAt(i))) {
-                        if (palavra == null) {
+                    }
+
+                    if (c == '*') {
+                        checkEndComment = true;
+                    }
+                }
+
+                if (!isDigit(c) && !isAlphabetic(c)) { //Se for algum tipo de simbolo
+                    if (c == '"') {
+                        if (!isSingleComment && !isMultiComment && !abreApostrofe) {
+                            if (abreAspas) {
+                                listaString.add(palavra.toString());
+                                palavra = new StringBuilder();
+                                abreAspas = false;
+                            } else {
+                                abreAspas = true;
+                                palavra.append(c);
+                            }
+                        }
+                    } else if (c == '\'') {
+                        if (!isSingleComment && !isMultiComment && !abreAspas) {
+                            if (abreApostrofe) {
+                                listaString.add(palavra.toString());
+                                palavra = new StringBuilder();
+                                abreApostrofe = false;
+                            } else {
+                                abreApostrofe = true;
+                                palavra.append(c);
+                            }
+                        }
+                    } else if (c == '/' || checkComment && !isSingleComment && !isMultiComment) {
+                        if (!checkEndComment) {
+                            if (!checkComment) {
+                                palavra.append(c);
+                                checkComment = true;
+                            } else {
+                                if (c == '/') {
+                                    palavra.append(c);
+                                    isSingleComment = true;
+                                    checkComment = false;
+                                } else if (c == '*') {
+                                    palavra.append(c);
+                                    isMultiComment = true;
+                                    checkComment = false;
+                                } else {
+                                    listaString.add(palavra.toString());
+                                    palavra = new StringBuilder();
+                                    checkComment = false;
+                                }
+                            }
+                        } else {
+                            checkEndComment = false;
+                        }
+                    } else if (!isWhitespace(c) && !isSingleComment && !isMultiComment && !isNum) {
+                        if (!abreAspas && !abreApostrofe) {
+                            palavra.append(c);
+                            listaString.add(palavra.toString());
                             palavra = new StringBuilder();
                         }
-                        palavra.append(linha.charAt(i));
-                    } else {
-                        if (palavra != null) {
-                            listaString.add(palavra.toString());
-                            palavra = null;
+                    }
+                } else if (isDigit(c) && !isReserved) {
+                    if (!isSingleComment && !isMultiComment && !abreAspas && !abreApostrofe) {
+                        if (!isNum) {
+                            isNum = true;
+                            palavra.append(c);
+                        }
+                    }
+                } else if (isAlphabetic(c)) {
+                    if (!isSingleComment && !isMultiComment && !abreAspas && !abreApostrofe) {
+                        if (!isReserved) {
+                            palavra.append(c);
+                            isReserved = true;
                         }
                     }
                 }
             }
-
-            if (palavra != null) {
-                listaString.add(palavra.toString());
-            }
         }
+
         for (String s : listaString) {
             System.out.println(s);
         }

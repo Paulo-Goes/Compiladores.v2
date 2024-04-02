@@ -37,7 +37,7 @@ public class Compilador {
                 token = new Token(Token.tipoToken.ID, lexema);
                 listaSimbolos.add(token);
                 listaToken.add(token);
-            } else if (lexema.matches("\"[^\"]*\"")) {
+            } else if (lexema.matches("\"[^\"]*[^\"]*\"")) {
                 token = new Token(Token.tipoToken.TXT, lexema);
                 listaSimbolos.add(token);
                 listaToken.add(token);

@@ -1,1 +1,18 @@
-String s = "é";
+//Isso é um comentário de uma linha
+
+/* Isso é um comentário
+ de várias linhas */
+
+12345
+
+"Isso é um teste"
+
+"Isso é um outro teste com números: 12345"
+
+'Isso é outro teste'
+
+String s = "string s";
+
+int a = 2;
+
+int bc = 123;
