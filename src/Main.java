@@ -7,6 +7,7 @@ import static java.lang.Character.*;
 
 /*Todo: Resolver problemas com comentários de várias linhas saindo como operador em vez de comentário
 *       Em CodigoProfessor, na linha 29, especificamente 'valores.length', o '.' não é reconhecido
+*       Adicionar argumento para que '(texto)' seja reconhecido junto como "(texto)"
 */
 
 
