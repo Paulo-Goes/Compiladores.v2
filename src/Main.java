@@ -7,18 +7,18 @@ import static java.lang.Character.*;
 
 /*
  * Todo: Resolver problemas com comentários de várias linhas saindo como operador em vez de comentário
- *       Em CodigoProfessor.txt, na linha 29, especificamente 'valores.length', o '.' não é reconhecido
- *       Adicionar argumento para que '(texto)' seja reconhecido junto como "(texto)"
  *       Fazer o analisador retornar um ID especial para apontar para um elemento na lista de simbolos para a lista de tokens (criar um Token especifico?)
  *       Adicionar suporte para Linux e MacOS (Gerenciar Desktop)
  *       Fazer o codigo abrir a pasta no final da execução ou talvez ja abrir os dois arquivos gerados lado a lado
  */
 
+//Ignorar char e ignorar a chamada de funções
+
 public class Main {
     public static void main(String[] args) throws IOException {
         /*
          * Codigo.txt - um exemplo de um codigo simples
-         * CodigoProfessor.txt - codigo que o professor usou para testar o analizador lexico
+         * CodigoProfessor.txt - codigo que o professor usou para testar o analizador lexico (.length é de proposito para dar erro)
          * Treino.txt - Alguns exemplos de elementos que conseguem passar, sem fazer parte de um codigo especifico
          */
         BufferedReader reader = new BufferedReader(new FileReader("CodigoProfessor.txt"));
@@ -159,7 +159,7 @@ public class Main {
             System.out.println(s);
         }
 
-        Compilador compilador = new Compilador();
-        compilador.identificador(listaString);
+        AnalisadorLexico analisador = new AnalisadorLexico();
+        analisador.identificador(listaString);
     }
 }
