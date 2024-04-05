@@ -147,6 +147,8 @@ public class Main {
             }
         }
 
+        reader.close();
+
         for (String s : listaString) {
             System.out.println(s);
         }
