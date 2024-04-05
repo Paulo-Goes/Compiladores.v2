@@ -6,7 +6,7 @@ public class Token {
         this.tipo = tipo;
         this.lexema = lexema;
     }
-    
+
     enum tipoToken {
         NUM,
         NUM_DEC,
