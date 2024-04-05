@@ -8,6 +8,8 @@ import static java.lang.Character.*;
 /*Todo: Resolver problemas com comentários de várias linhas saindo como operador em vez de comentário
 *       Em CodigoProfessor, na linha 29, especificamente 'valores.length', o '.' não é reconhecido
 *       Adicionar argumento para que '(texto)' seja reconhecido junto como "(texto)"
+*       Fazer o analisador retornar um ID especial para apontar para um elemento na lista de simbolos para a lista de tokens
+*       Adicionar suporte para Linux e MacOS (Gerenciar Desktop)
 */
 
 
