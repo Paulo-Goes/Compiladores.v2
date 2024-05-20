@@ -1,4 +1,3 @@
-import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.BufferedWriter;
@@ -10,6 +9,24 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class AnalisadorLexico {
+    private final ArrayList<Token> listaSimbolos;
+    private final ArrayList<Token> listaToken;
+    private final File desktop;
+
+    public AnalisadorLexico(File desktop){
+        listaSimbolos = new ArrayList<>();
+        listaToken = new ArrayList<>();
+        this.desktop = desktop;
+    }
+
+    public ArrayList<Token> getListaSimbolos() {
+        return listaSimbolos;
+    }
+
+    public ArrayList<Token> getListaToken() {
+        return listaToken;
+    }
+
     private static void createFolder(File folder) {
         if (!folder.exists()) {
             boolean created = folder.mkdirs();
@@ -24,7 +41,7 @@ public class AnalisadorLexico {
     }
 
     public static void showFolder(File subFolder) throws IOException, InterruptedException, AWTException {
-        String so = System.getProperty("os.name".toLowerCase());
+        String so = System.getProperty("os.name").toLowerCase();
         ProcessBuilder pb = getProcessBuilder(subFolder, so);
 
         pb.start();
@@ -56,59 +73,48 @@ public class AnalisadorLexico {
     }
 
     public void identificador(ArrayList<String> lista) throws IOException, InterruptedException, AWTException {
-        ArrayList<Token> listaSimbolos = new ArrayList<>();
-        ArrayList<Token> listaToken = new ArrayList<>();
-
         for (String lexema : lista) {
-            Token token;
-
             //Palavras reservadas
             if (lexema.matches("\\b(abstract|assert|boolean|break|byte|case|catch|char|class|const|continue|default|do|double|else|enum|extends|final|finally|float|for|goto|if|implements|import|instanceof|int|interface|long|main|native|new|null|package|private|protected|println|public|return|scanf|short|static|strictfp|super|switch|synchronized|this|throw|throws|transient|try|void|volatile|while)\\b")) {
-                token = new Token(Token.tipoToken.KEYWORD, lexema);
-                listaToken.add(token);
+                listaToken.add(new Token(TipoToken.KEYWORD, lexema));
 
-                //Números
+                //Números inteiros
+            } else if(lexema.matches("\\b\\d+\\b")){
+                listaToken.add(new Token(TipoToken.NUM, lexema));
+
+                //Números decimais
             } else if (lexema.matches("\\d+(\\.\\d+)?")) {
-                token = new Token(Token.tipoToken.NUM, lexema);
-                listaToken.add(token);
+                listaToken.add(new Token(TipoToken.NUM_DEC, lexema));
 
                 //Identificadores
             } else if (lexema.matches("[a-zA-Z]+[a-zA-Z0-9_-]*")) {
-                token = new Token(Token.tipoToken.ID, lexema);
+                Token token = new Token(TipoToken.ID, lexema);
                 listaSimbolos.add(token);
-                listaToken.add(new Token(Token.tipoToken.SIMBOLO_PONTEIRO, String.valueOf(listaSimbolos.indexOf(token))));
+                listaToken.add(new Token(TipoToken.SIMBOLO_PONTEIRO, String.valueOf(listaSimbolos.indexOf(token))));
 
                 //Texto
             } else if (lexema.matches("\"[^\"]*[^\"]*\"")) {
-                token = new Token(Token.tipoToken.TXT, lexema);
+                Token token = new Token(TipoToken.TXT, lexema);
                 listaSimbolos.add(token);
-                listaToken.add(new Token(Token.tipoToken.SIMBOLO_PONTEIRO, String.valueOf(listaSimbolos.indexOf(token))));
+                listaToken.add(new Token(TipoToken.SIMBOLO_PONTEIRO, String.valueOf(listaSimbolos.indexOf(token))));
 
-                //Comentário de uma linha
-            } else if (lexema.matches("//.*")) {
-                token = new Token(Token.tipoToken.COMENTARIO, lexema);
-                listaToken.add(token);
-
-                //Comentário de várias linhas
-            } else if (lexema.matches("/\\*.*\\*/")) {
-                token = new Token(Token.tipoToken.COMENTARIO, lexema);
-                listaToken.add(token);
+                //Comentário de uma ou mais linhas
+            } else if (lexema.matches("//.*") || lexema.matches("/\\*.*\\*/")) {
+                listaToken.add(new Token(TipoToken.COMENTARIO, lexema));
 
                 //Operadores
             } else if (lexema.matches(".*[+\\-*/%=!<>&|^]=?")) {
-                token = new Token(Token.tipoToken.OPERADOR, lexema);
-                listaToken.add(token);
+                listaToken.add(new Token(TipoToken.OPERADOR, lexema));
 
                 //Símbolos diversos
             } else if (lexema.matches("[\\[\\]{}(),;]")) {
-                token = new Token(Token.tipoToken.SIMBOLO_ESPECIAL, lexema);
-                listaToken.add(token);
+                listaToken.add(new Token(TipoToken.SIMBOLO_ESPECIAL, lexema));
             } else {
-                token = new Token(Token.tipoToken.INVALIDO, lexema);
-                throw new IllegalArgumentException("[" + token + "]" + " não é um token aceito");
+                throw new IllegalArgumentException("[" + new Token(TipoToken.INVALIDO, lexema) + "]" + " não é um token aceito");
             }
         }
-        File desktop = new File(FileSystemView.getFileSystemView().getHomeDirectory().toString());
+        listaToken.add(new Token(TipoToken.EOF, ""));
+
         File folder = new File(desktop, "Analisador Léxico");
         createFolder(folder);
 

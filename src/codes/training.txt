@@ -5,9 +5,9 @@
 
 12345
 
-"Isso é um teste"
+"Isso é uma String"
 
-"Isso é um outro teste com números: 12345"
+"Isso é uma String com números: 12345"
 
 String s = "string s";
 
