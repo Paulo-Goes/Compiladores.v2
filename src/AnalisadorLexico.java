@@ -24,7 +24,9 @@ public class AnalisadorLexico {
     }
 
     public static void showFolder(File subFolder) throws IOException, InterruptedException, AWTException {
-        ProcessBuilder pb = new ProcessBuilder("explorer.exe", subFolder.getAbsolutePath());
+        String so = System.getProperty("os.name".toLowerCase());
+        ProcessBuilder pb = getProcessBuilder(subFolder, so);
+
         pb.start();
 
         Thread.sleep(1000);
@@ -36,6 +38,21 @@ public class AnalisadorLexico {
         robot.keyRelease(KeyEvent.VK_WINDOWS);
 
         System.out.println("Maximizado");
+    }
+
+    private static ProcessBuilder getProcessBuilder(File subFolder, String so) {
+        ProcessBuilder pb;
+
+        if(so.contains("win")){
+            pb = new ProcessBuilder("explorer.exe", subFolder.getAbsolutePath());
+        }else if(so.contains("mac")){
+            pb = new ProcessBuilder("open", subFolder.getAbsolutePath());
+        }else if(so.contains("nix") || so.contains("nux")){
+            pb = new ProcessBuilder("xdg-open", subFolder.getAbsolutePath());
+        }else{
+            throw new UnsupportedOperationException("Sistema operacional não suportado: " + so);
+        }
+        return pb;
     }
 
     public void identificador(ArrayList<String> lista) throws IOException, InterruptedException, AWTException {
