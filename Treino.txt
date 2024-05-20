@@ -9,8 +9,6 @@
 
 "Isso é um outro teste com números: 12345"
 
-'Isso é outro teste'
-
 String s = "string s";
 
 int a = 2;

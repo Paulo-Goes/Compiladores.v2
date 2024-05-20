@@ -9,7 +9,6 @@ import static java.lang.Character.*;
 /*
  * Todo: Resolver problemas com comentários de várias linhas saindo como operador em vez de comentário
  *       Adicionar suporte para Linux e MacOS (Gerenciar Desktop)
- *       Fazer o codigo abrir a pasta no final da execução ou talvez ja abrir os dois arquivos gerados lado a lado
  */
 
 //Ignorar char e ignorar a chamada de funções
@@ -21,7 +20,7 @@ public class Main {
          * CodigoProfessor.txt - codigo que o professor usou para testar o analizador lexico (.length é de proposito para dar erro)
          * Treino.txt - Alguns exemplos de elementos que conseguem passar, sem fazer parte de um codigo especifico
          */
-        BufferedReader reader = new BufferedReader(new FileReader("Codigo.txt"));
+        BufferedReader reader = new BufferedReader(new FileReader("Treino.txt"));
 
         ArrayList<String> listaString = new ArrayList<>();
 
