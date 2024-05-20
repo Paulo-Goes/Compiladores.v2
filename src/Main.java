@@ -8,7 +8,8 @@ import static java.lang.Character.*;
 
 /*
  * Todo: Resolver problemas com comentários de várias linhas saindo como operador em vez de comentário
- *       Adicionar suporte para Linux e MacOS (Gerenciar Desktop)
+ *       Adicionar suporte para Linux e MacOS (Gerenciar Desktop) (Testing)
+ *       Adicionar um sistema para reconhecer arquivos .txt na pasta Códigos e usar o terminal para determinar o código a ser executado
  */
 
 //Ignorar char e ignorar a chamada de funções
@@ -16,11 +17,11 @@ import static java.lang.Character.*;
 public class Main {
     public static void main(String[] args) throws IOException, InterruptedException, AWTException {
         /*
-         * Codigo.txt - um exemplo de um codigo simples
-         * CodigoProfessor.txt - codigo que o professor usou para testar o analizador lexico (.length é de proposito para dar erro)
-         * Treino.txt - Alguns exemplos de elementos que conseguem passar, sem fazer parte de um codigo especifico
+         * codeEX.txt - um exemplo de um código simples
+         * codeProfessor.txt - código que o professor usou para testar o analisador lexico (.length é de proposito para dar erro)
+         * training.txt - Alguns exemplos de elementos que conseguem passar, sem fazer parte de um código especifico
          */
-        BufferedReader reader = new BufferedReader(new FileReader("Treino.txt"));
+        BufferedReader reader = new BufferedReader(new FileReader("src/codes/codeProfessor.txt"));
 
         ArrayList<String> listaString = new ArrayList<>();
 
@@ -81,7 +82,7 @@ public class Main {
                     }
                 }
 
-                if (!isDigit(c) && !isAlphabetic(c)) { //Se for algum tipo de simbolo
+                if (!isDigit(c) && !isAlphabetic(c)) { //Se for algum tipo de símbolo
                     if (c == '"') {
                         if (!isSingleComment && !isMultiComment && !abreApostrofe) {
                             if (abreAspas) {

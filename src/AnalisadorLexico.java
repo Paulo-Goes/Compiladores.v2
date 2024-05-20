@@ -50,7 +50,7 @@ public class AnalisadorLexico {
                 token = new Token(Token.tipoToken.KEYWORD, lexema);
                 listaToken.add(token);
 
-                //Numeros
+                //Números
             } else if (lexema.matches("\\d+(\\.\\d+)?")) {
                 token = new Token(Token.tipoToken.NUM, lexema);
                 listaToken.add(token);
@@ -98,13 +98,13 @@ public class AnalisadorLexico {
         String time = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yy hh-mm-ss"));
 
         File tokens = new File(folder, "Tokens " + time + ".txt");
-        File simbolos = new File(folder, "Simbolos " + time + ".txt");
+        File simbolos = new File(folder, "Símbolos " + time + ".txt");
 
         BufferedWriter writerToken = new BufferedWriter(new FileWriter(tokens));
         BufferedWriter writerSimbolo = new BufferedWriter(new FileWriter(simbolos));
 
         writerToken.write("Tokens\n\n");
-        writerSimbolo.write("Simbolos\n\n");
+        writerSimbolo.write("Símbolos\n\n");
 
         for (Token token : listaToken) {
             writerToken.write(token + "\n");
