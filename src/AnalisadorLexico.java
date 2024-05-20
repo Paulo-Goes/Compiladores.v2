@@ -23,39 +23,66 @@ public class AnalisadorLexico {
         }
     }
 
+    public static void showFolder(File subFolder) throws IOException, InterruptedException, AWTException {
+        ProcessBuilder pb = new ProcessBuilder("explorer.exe", subFolder.getAbsolutePath());
+        pb.start();
+
+        Thread.sleep(1000);
+
+        Robot robot = new Robot();
+        robot.keyPress(KeyEvent.VK_WINDOWS);
+        robot.keyPress(KeyEvent.VK_UP);
+        robot.keyRelease(KeyEvent.VK_UP);
+        robot.keyRelease(KeyEvent.VK_WINDOWS);
+
+        System.out.println("Maximizado");
+    }
+
     public void identificador(ArrayList<String> lista) throws IOException, InterruptedException, AWTException {
         ArrayList<Token> listaSimbolos = new ArrayList<>();
         ArrayList<Token> listaToken = new ArrayList<>();
 
         for (String lexema : lista) {
             Token token;
+
             //Palavras reservadas
             if (lexema.matches("\\b(abstract|assert|boolean|break|byte|case|catch|char|class|const|continue|default|do|double|else|enum|extends|final|finally|float|for|goto|if|implements|import|instanceof|int|interface|long|main|native|new|null|package|private|protected|println|public|return|scanf|short|static|strictfp|super|switch|synchronized|this|throw|throws|transient|try|void|volatile|while)\\b")) {
                 token = new Token(Token.tipoToken.KEYWORD, lexema);
                 listaToken.add(token);
+
                 //Numeros
             } else if (lexema.matches("\\d+(\\.\\d+)?")) {
                 token = new Token(Token.tipoToken.NUM, lexema);
                 listaToken.add(token);
+
                 //Identificadores
             } else if (lexema.matches("[a-zA-Z]+[a-zA-Z0-9_-]*")) {
                 token = new Token(Token.tipoToken.ID, lexema);
                 listaSimbolos.add(token);
                 listaToken.add(new Token(Token.tipoToken.SIMBOLO_PONTEIRO, String.valueOf(listaSimbolos.indexOf(token))));
+
                 //Texto
             } else if (lexema.matches("\"[^\"]*[^\"]*\"")) {
                 token = new Token(Token.tipoToken.TXT, lexema);
                 listaSimbolos.add(token);
                 listaToken.add(new Token(Token.tipoToken.SIMBOLO_PONTEIRO, String.valueOf(listaSimbolos.indexOf(token))));
+
+                //Comentário de uma linha
+            } else if (lexema.matches("//.*")) {
+                token = new Token(Token.tipoToken.COMENTARIO, lexema);
+                listaToken.add(token);
+
+                //Comentário de várias linhas
+            } else if (lexema.matches("/\\*.*\\*/")) {
+                token = new Token(Token.tipoToken.COMENTARIO, lexema);
+                listaToken.add(token);
+
                 //Operadores
             } else if (lexema.matches(".*[+\\-*/%=!<>&|^]=?")) {
                 token = new Token(Token.tipoToken.OPERADOR, lexema);
                 listaToken.add(token);
-                //Comentario de uma ou mais linhas
-            } else if (lexema.matches("//.*")) {
-                token = new Token(Token.tipoToken.COMENTARIO, lexema);
-                listaToken.add(token);
-                //Simbolos diversos
+
+                //Símbolos diversos
             } else if (lexema.matches("[\\[\\]{}(),;]")) {
                 token = new Token(Token.tipoToken.SIMBOLO_ESPECIAL, lexema);
                 listaToken.add(token);
@@ -86,7 +113,7 @@ public class AnalisadorLexico {
         int aux = 0;
 
         for (Token listaSimbolo : listaSimbolos) {
-            writerSimbolo.write(aux + " " +listaSimbolo + "\n");
+            writerSimbolo.write(aux + " " + listaSimbolo + "\n");
             aux++;
         }
 
@@ -94,20 +121,5 @@ public class AnalisadorLexico {
         writerSimbolo.close();
 
         showFolder(folder);
-    }
-
-    public static void showFolder(File subFolder) throws IOException, InterruptedException, AWTException {
-        ProcessBuilder pb = new ProcessBuilder("explorer.exe", subFolder.getAbsolutePath());
-        pb.start();
-
-        Thread.sleep(1000);
-
-        Robot robot = new Robot();
-        robot.keyPress(KeyEvent.VK_WINDOWS);
-        robot.keyPress(KeyEvent.VK_UP);
-        robot.keyRelease(KeyEvent.VK_UP);
-        robot.keyRelease(KeyEvent.VK_WINDOWS);
-
-        System.out.println("Maximizado");
     }
 }
