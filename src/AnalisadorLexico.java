@@ -1,4 +1,6 @@
 import javax.swing.filechooser.FileSystemView;
+import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -21,7 +23,7 @@ public class AnalisadorLexico {
         }
     }
 
-    public void identificador(ArrayList<String> lista) throws IOException {
+    public void identificador(ArrayList<String> lista) throws IOException, InterruptedException, AWTException {
         ArrayList<Token> listaSimbolos = new ArrayList<>();
         ArrayList<Token> listaToken = new ArrayList<>();
 
@@ -36,11 +38,11 @@ public class AnalisadorLexico {
             } else if (lexema.matches("[a-zA-Z]+[a-zA-Z0-9_-]*")) {
                 token = new Token(Token.tipoToken.ID, lexema);
                 listaSimbolos.add(token);
-                listaToken.add(token);
+                listaToken.add(new Token(Token.tipoToken.SIMBOLO_PONTEIRO, String.valueOf(listaSimbolos.indexOf(token))));
             } else if (lexema.matches("\"[^\"]*[^\"]*\"")) {
                 token = new Token(Token.tipoToken.TXT, lexema);
                 listaSimbolos.add(token);
-                listaToken.add(token);
+                listaToken.add(new Token(Token.tipoToken.SIMBOLO_PONTEIRO, String.valueOf(listaSimbolos.indexOf(token))));
             } else if (lexema.matches(".*[+\\-*/%=!<>&|^]=?")) {
                 token = new Token(Token.tipoToken.OPERADOR, lexema);
                 listaToken.add(token);
@@ -74,11 +76,31 @@ public class AnalisadorLexico {
             writerToken.write(token + "\n");
         }
 
+        int aux = 0;
+
         for (Token listaSimbolo : listaSimbolos) {
-            writerSimbolo.write(listaSimbolo + "\n");
+            writerSimbolo.write(aux + " " +listaSimbolo + "\n");
+            aux++;
         }
 
         writerToken.close();
         writerSimbolo.close();
+
+        showFolder(folder);
+    }
+
+    public static void showFolder(File subFolder) throws IOException, InterruptedException, AWTException {
+        ProcessBuilder pb = new ProcessBuilder("explorer.exe", subFolder.getAbsolutePath());
+        pb.start();
+
+        Thread.sleep(1000);
+
+        Robot robot = new Robot();
+        robot.keyPress(KeyEvent.VK_WINDOWS);
+        robot.keyPress(KeyEvent.VK_UP);
+        robot.keyRelease(KeyEvent.VK_UP);
+        robot.keyRelease(KeyEvent.VK_WINDOWS);
+
+        System.out.println("Maximizado");
     }
 }

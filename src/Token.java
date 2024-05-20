@@ -9,7 +9,7 @@ public class Token {
 
     enum tipoToken {
         NUM,
-        NUM_DEC,
+        SIMBOLO_PONTEIRO,
         ID,
         KEYWORD,
         TXT,

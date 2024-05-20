@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -7,7 +8,6 @@ import static java.lang.Character.*;
 
 /*
  * Todo: Resolver problemas com comentários de várias linhas saindo como operador em vez de comentário
- *       Fazer o analisador retornar um ID especial para apontar para um elemento na lista de simbolos para a lista de tokens (criar um Token especifico?)
  *       Adicionar suporte para Linux e MacOS (Gerenciar Desktop)
  *       Fazer o codigo abrir a pasta no final da execução ou talvez ja abrir os dois arquivos gerados lado a lado
  */
@@ -15,13 +15,13 @@ import static java.lang.Character.*;
 //Ignorar char e ignorar a chamada de funções
 
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException, AWTException {
         /*
          * Codigo.txt - um exemplo de um codigo simples
          * CodigoProfessor.txt - codigo que o professor usou para testar o analizador lexico (.length é de proposito para dar erro)
          * Treino.txt - Alguns exemplos de elementos que conseguem passar, sem fazer parte de um codigo especifico
          */
-        BufferedReader reader = new BufferedReader(new FileReader("CodigoProfessor.txt"));
+        BufferedReader reader = new BufferedReader(new FileReader("Codigo.txt"));
 
         ArrayList<String> listaString = new ArrayList<>();
 
