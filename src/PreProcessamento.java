@@ -5,12 +5,12 @@ import java.util.ArrayList;
 
 import static java.lang.Character.*;
 
-public class Separador {
+public class PreProcessamento {
 
     private final ArrayList<String> listaString;
     private final String arquivo;
 
-    public Separador(String arquivo) throws IOException {
+    public PreProcessamento(String arquivo) throws IOException {
         listaString = new ArrayList<>();
         this.arquivo = arquivo;
         separar();
