@@ -94,10 +94,6 @@ public class Main {
         bwS.close();
     }
 
-    private static void writeSyntactic() throws IOException {
-        BufferedWriter bwS = new BufferedWriter(new FileWriter(new File(runFolder, "4 .txt")));
-    }
-
     private static void createFolder() {
         if (!runFolder.exists()) {
             boolean created = runFolder.mkdirs();
