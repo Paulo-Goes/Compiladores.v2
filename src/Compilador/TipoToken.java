@@ -1,3 +1,5 @@
+package Compilador;
+
 public enum TipoToken {
     NUM,
     NUM_DEC,

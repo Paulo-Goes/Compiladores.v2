@@ -1,3 +1,5 @@
+package Compilador;
+
 import java.util.ArrayList;
 
 public class AnalisadorLexico {
