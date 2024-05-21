@@ -16,6 +16,8 @@ import java.util.Scanner;
 /*
  * Todo: Testar o suporte para MacOS (n sei como)
  *       Análise Sintática
+ *       Verificar se um símbolo ja existe na tabéla de símbolos para não adicionar mais de uma vez
+ *       Comentários são símbolos ou tokens?
  */
 
 //Ignorar char e ignorar a chamada de funções
