@@ -1,12 +1,13 @@
 package Compilador;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class AnalisadorLexico {
     private final ArrayList<Token> listaSimbolos;
     private final ArrayList<Token> listaToken;
 
-    public AnalisadorLexico(){
+    public AnalisadorLexico() {
         listaSimbolos = new ArrayList<>();
         listaToken = new ArrayList<>();
     }
@@ -26,7 +27,7 @@ public class AnalisadorLexico {
                 listaToken.add(new Token(TipoToken.KEYWORD, lexema));
 
                 //Números inteiros
-            } else if(lexema.matches("\\b\\d+\\b")){
+            } else if (lexema.matches("\\b\\d+\\b")) {
                 listaToken.add(new Token(TipoToken.NUM, lexema));
 
                 //Números decimais
@@ -35,9 +36,21 @@ public class AnalisadorLexico {
 
                 //Identificadores
             } else if (lexema.matches("[a-zA-Z]+[a-zA-Z0-9_-]*")) {
-                Token token = new Token(TipoToken.ID, lexema);
-                listaSimbolos.add(token);
-                listaToken.add(new Token(TipoToken.SIMBOLO_PONTEIRO, String.valueOf(listaSimbolos.indexOf(token))));
+                boolean add = true;
+                int size = listaSimbolos.size();
+                for(int i = 0;i < size;i++){
+                    if(Objects.equals(listaSimbolos.get(i).lexema(), lexema)){
+                        add = false;
+                        listaToken.add(new Token(TipoToken.SIMBOLO_PONTEIRO, String.valueOf(i)));
+                        break;
+                    }
+                }
+
+                if (add) {
+                    Token token = new Token(TipoToken.ID, lexema);
+                    listaSimbolos.add(token);
+                    listaToken.add(new Token(TipoToken.SIMBOLO_PONTEIRO, String.valueOf(listaSimbolos.indexOf(token))));
+                }
 
                 //Texto
             } else if (lexema.matches("\"[^\"]*[^\"]*\"")) {
