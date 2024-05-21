@@ -54,8 +54,8 @@ public class Main {
 
         writeLexic(lexico.getListaToken(), lexico.getListaSimbolos());
 
-        AnalisadorSintatico sintatico = new AnalisadorSintatico(lexico.getListaToken());
-        sintatico.parse();
+        /*AnalisadorSintatico sintatico = new AnalisadorSintatico(lexico.getListaToken());
+        sintatico.parse();*/
 
         /* Adicionar os items aqui */
 
