@@ -8,8 +8,7 @@ public enum TipoToken {
     TXT,
     OPERADOR,
     SIMBOLO_ESPECIAL,
-    SIMBOLO_PONTEIRO,
     COMENTARIO,
     INVALIDO,
-    EOF
+    EOF //Fim do arquivo (fim da análise léxica), aparece no final da lista de tokens
 }

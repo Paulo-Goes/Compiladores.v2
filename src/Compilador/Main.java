@@ -16,7 +16,6 @@ import java.util.Scanner;
 /*
  * Todo: Testar o suporte para MacOS (n sei como)
  *       Análise Sintática
- *       Comentários são símbolos ou tokens?
  */
 
 //Ignorar char e ignorar a chamada de funções
@@ -57,8 +56,6 @@ public class Main {
 
         /*AnalisadorSintatico sintatico = new AnalisadorSintatico(lexico.getListaToken());
         sintatico.parse();*/
-
-        /* Adicionar os items aqui */
 
         showFolder();
     }

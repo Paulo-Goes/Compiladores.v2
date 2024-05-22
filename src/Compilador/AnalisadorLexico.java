@@ -41,7 +41,7 @@ public class AnalisadorLexico {
                 for(int i = 0;i < size;i++){
                     if(Objects.equals(listaSimbolos.get(i).lexema(), lexema)){
                         add = false;
-                        listaToken.add(new Token(TipoToken.SIMBOLO_PONTEIRO, String.valueOf(i)));
+                        listaToken.add(new Token(TipoToken.ID, String.valueOf(i)));
                         break;
                     }
                 }
@@ -49,14 +49,14 @@ public class AnalisadorLexico {
                 if (add) {
                     Token token = new Token(TipoToken.ID, lexema);
                     listaSimbolos.add(token);
-                    listaToken.add(new Token(TipoToken.SIMBOLO_PONTEIRO, String.valueOf(listaSimbolos.indexOf(token))));
+                    listaToken.add(new Token(TipoToken.ID, String.valueOf(listaSimbolos.indexOf(token))));
                 }
 
                 //Texto
             } else if (lexema.matches("\"[^\"]*[^\"]*\"")) {
                 Token token = new Token(TipoToken.TXT, lexema);
                 listaSimbolos.add(token);
-                listaToken.add(new Token(TipoToken.SIMBOLO_PONTEIRO, String.valueOf(listaSimbolos.indexOf(token))));
+                listaToken.add(new Token(TipoToken.TXT, String.valueOf(listaSimbolos.indexOf(token))));
 
                 //Comentário de uma ou mais linhas
             } else if (lexema.matches("//.*") || lexema.matches("/\\*.*\\*/")) {
