@@ -33,6 +33,13 @@ public class AnalisadorSintatico {
     }
 
     private void declaracao() {
+
+        /*if(currentToken.tipo() == TipoToken.KEYWORD){
+            System.out.println(currentToken.lexema() + " é uma palavra chave");
+        }*/
+
+
+
         // Declaracao -> DeclaracaoVariavel
         if (currentToken.tipo() == TipoToken.KEYWORD && isTipo(currentToken.lexema())) {
             eat(TipoToken.KEYWORD);
@@ -54,7 +61,7 @@ public class AnalisadorSintatico {
     }
 
     private boolean isTipo(String lexema) {
-        return lexema.equals("int") || lexema.equals("float") || lexema.equals("double") || lexema.equals("char") || lexema.equals("boolean");
+        return lexema.equals("int") || lexema.equals("float") || lexema.equals("double") || lexema.equals("char") || lexema.equals("boolean") || lexema.equals("main");
     }
 
     private void expressao() {

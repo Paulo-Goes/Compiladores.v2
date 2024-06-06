@@ -16,6 +16,7 @@ import java.util.Scanner;
 /*
  * Todo: Testar o suporte para MacOS (n sei como)
  *       Análise Sintática
+ *       Análise Semântica
  */
 
 //Ignorar char e ignorar a chamada de funções
