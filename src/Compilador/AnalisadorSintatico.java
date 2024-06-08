@@ -50,7 +50,44 @@ public class AnalisadorSintatico {
         }
     }
 
+    private void tipo() throws Exception {
+        conferir(TipoToken.KEYWORD);
+    }
+
+    private void analisarDeclaracaoVariavel() throws Exception {
+        tipo();
+        conferir(TipoToken.ID);
+        if (proximoToken().lexema().equals("=")) {
+            conferir(TipoToken.OPERADOR);
+            analisarExpressao();
+        }
+        conferir(TipoToken.SIMBOLO_ESPECIAL);
+    }
+
+    private void analisarExpressao() throws Exception {
+
+        if (proximoToken().tipo() == TipoToken.ID) { 
+            conferir(TipoToken.ID);
+            if (proximoToken().lexema().equals("=") || proximoToken().lexema().matches("[+\\-*/%&|]=")) {
+                conferir(TipoToken.OPERADOR);
+                analisarExpressao();
+            }
+        } else if (proximoToken().tipo() == TipoToken.NUM || proximoToken().tipo() == TipoToken.NUM_DEC || proximoToken().tipo() == TipoToken.TXT) {
+            conferir(proximoToken().tipo());
+        } else {
+            throw new Exception("Erro de sintaxe na expressão: " + proximoToken().lexema());
+        }
+    }
+
     private void analisarDeclaracao() throws Exception {
-        // aqui é onde sera implementado aquela logica do ANTLR
+        // aqui é onde sera implementado aquela logica do ANTLR  
+        if (proximoToken().tipo() == TipoToken.KEYWORD) {
+            String lexema = proximoToken().lexema();
+            if (lexema.equals("int") || lexema.equals("float") || lexema.equals("double") ||
+                lexema.equals("char") || lexema.equals("boolean") || lexema.equals("vet")) {
+                analisarDeclaracaoVariavel();
+            }
+        }
+        
     }
 }
