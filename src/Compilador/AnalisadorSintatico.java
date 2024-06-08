@@ -78,6 +78,7 @@ public class AnalisadorSintatico {
             throw new Exception("Erro de sintaxe na expressão: " + proximoToken().lexema());
         }
     }
+    
 
     private void analisarDeclaracao() throws Exception {
         // aqui é onde sera implementado aquela logica do ANTLR  
@@ -86,8 +87,43 @@ public class AnalisadorSintatico {
             if (lexema.equals("int") || lexema.equals("float") || lexema.equals("double") ||
                 lexema.equals("char") || lexema.equals("boolean") || lexema.equals("vet")) {
                 analisarDeclaracaoVariavel();
+            }else if (lexema.equals("struct")) {
+                analisarDeclaracaoEstrutura();
+            } else if (lexema.equals("if") || lexema.equals("while") || lexema.equals("for") ||
+                       lexema.equals("switch") || lexema.equals("break") || lexema.equals("continue") ||
+                       lexema.equals("return")) {
+                    analisarEstruturaControle();
+            } else {
+                analisarDeclaracaoFuncao();
             }
+        } else if (proximoToken().tipo() == TipoToken.COMENTARIO) {
+            analisarComentario();
+        } else {
+            throw new Exception("Erro de sintaxe na declaração: " + proximoToken().lexema());
         }
-        
+
     }
+
+    // metodos de verificações que precisa implementar
+    private void analisarComentario() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'analisarComentario'");
+    }
+
+    private void analisarDeclaracaoFuncao() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'analisarDeclaracaoFuncao'");
+    }
+
+    private void analisarEstruturaControle() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'analisarEstruturaControle'");
+    }
+
+    private void analisarDeclaracaoEstrutura() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'analisarDeclaracaoEstrutura'");
+    }
+        
+    
 }
