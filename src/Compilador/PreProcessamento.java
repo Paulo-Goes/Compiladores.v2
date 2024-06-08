@@ -152,7 +152,9 @@ public class PreProcessamento {
                 }
             }
         }
-
+        if (!palavra.isEmpty()) {
+            listaString.add(palavra.toString());
+        }
         reader.close();
 
         for (String s : listaString) {

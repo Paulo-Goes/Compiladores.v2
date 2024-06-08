@@ -23,7 +23,7 @@ public class AnalisadorLexico {
     public void identificador(ArrayList<String> lista) {
         for (String lexema : lista) {
             //Palavras reservadas
-            if (lexema.matches("\\b(abstract|assert|boolean|break|byte|case|catch|char|class|const|continue|default|do|double|else|enum|extends|final|finally|float|for|goto|if|implements|import|instanceof|int|interface|long|main|native|new|null|package|private|protected|println|public|return|scanf|short|static|strictfp|super|switch|synchronized|this|throw|throws|transient|try|void|volatile|while)\\b")) {
+            if (lexema.matches("\\b(int|float|char|boolean|void|if|else|for|while|scanf|println|main|return)\\b")) {
                 listaToken.add(new Token(TipoToken.KEYWORD, lexema));
 
                 //Números inteiros
@@ -38,8 +38,8 @@ public class AnalisadorLexico {
             } else if (lexema.matches("[a-zA-Z]+[a-zA-Z0-9_-]*")) {
                 boolean add = true;
                 int size = listaSimbolos.size();
-                for(int i = 0;i < size;i++){
-                    if(Objects.equals(listaSimbolos.get(i).lexema(), lexema)){
+                for (int i = 0; i < size; i++) {
+                    if (Objects.equals(listaSimbolos.get(i).lexema(), lexema)) {
                         add = false;
                         listaToken.add(new Token(TipoToken.ID, String.valueOf(i)));
                         break;
@@ -63,7 +63,7 @@ public class AnalisadorLexico {
                 listaToken.add(new Token(TipoToken.COMENTARIO, lexema));
 
                 //Operadores
-            } else if (lexema.matches(".*[+\\-*/%=!<>&|^]=?")) {
+            } else if (lexema.matches("=|\\+|-|\\*|/|%|&&|!|>|<|>=|<=|!=|==")) {
                 listaToken.add(new Token(TipoToken.OPERADOR, lexema));
 
                 //Símbolos diversos
@@ -73,6 +73,6 @@ public class AnalisadorLexico {
                 throw new IllegalArgumentException("[" + new Token(TipoToken.INVALIDO, lexema) + "]" + " não é um token aceito");
             }
         }
-        listaToken.add(new Token(TipoToken.EOF, ""));
+        listaToken.add(new Token(TipoToken.EOF, "End of file."));
     }
 }

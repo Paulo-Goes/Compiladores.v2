@@ -27,12 +27,6 @@ public class Main {
     private static final File runFolder = new File(desktopFolder, "Compilação - " + time);
 
     public static void main(String[] args) throws IOException, InterruptedException, AWTException {
-        /*
-         * codeEX.txt - um exemplo de um código simples
-         * codeProfessor.txt - código que o professor usou para testar o analisador lexico (.length é de proposito para dar erro)
-         * training.txt - Alguns exemplos de elementos que conseguem passar, sem fazer parte de um código especifico
-         */
-
         File pastaCodigos = new File("src/codes");
         File[] codigos = pastaCodigos.listFiles((dir, name) -> name.toLowerCase().endsWith(".txt"));
 

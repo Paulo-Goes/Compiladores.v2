@@ -4,9 +4,11 @@ int main(){
 
     int c = a - b;
 
-    double d = a / c;
+    float d = a / c;
 
-    //char mensagem[] = "Olá, mundo!";
+    char mensagem[] = "Olá, mundo!";
+
+    //Comentário
 
     /*
     Comentário que faz um comentário sobre o comentário
