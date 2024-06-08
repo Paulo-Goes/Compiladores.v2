@@ -1,86 +1,56 @@
 package Compilador;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AnalisadorSintatico {
-    private Token currentToken;
-    private int i;
-    private final ArrayList<Token> lista;
+   
+    private final List<Token> tokens;
+    private int posicaoAtual = 0;
 
-    public AnalisadorSintatico(ArrayList<Token> listaToken) {
-        currentToken = listaToken.get(i);
-        lista = listaToken;
-        parse();
+    public AnalisadorSintatico(List<Token> tokens) {
+        this.tokens = tokens;
     }
 
-    private void eat(TipoToken tipo) {
-        if (currentToken.tipo() == tipo) {
-            getNext();
+    private Token proximoToken() {
+        if (posicaoAtual < tokens.size()) {
+            return tokens.get(posicaoAtual);
+        }
+        return new Token(TipoToken.EOF, "");
+    }
+
+    private void conferir(TipoToken esperado) throws Exception {
+        if (proximoToken().tipo() == esperado) {
+            posicaoAtual++;
         } else {
-            throw new RuntimeException("Erro de sintaxe: esperava " + tipo + " mas encontrou " + currentToken.tipo());
+            throw new Exception("Erro de sintaxe: Esperado " + esperado + " mas encontrado " + proximoToken().tipo());
         }
     }
 
-    public void parse() {
-        programa();
-    }
-
-    private void programa() {
-        // Programa -> Declaracao
-        while (currentToken.tipo() != TipoToken.EOF) {
-            declaracao();
+    public boolean analisar() {
+        try {
+            // Inicia a análise sintática a partir do ponto de entrada da gramática
+            programa();
+            
+            // Verifica se o final do arquivo foi alcançado
+            conferir(TipoToken.EOF);
+            
+            // Se tudo estiver correto até aqui, retorna verdadeiro
+            return true;
+        } catch (Exception e) {
+            // Se houver qualquer exceção durante a análise, imprime uma mensagem de erro e retorna falso
+            System.err.println(e.getMessage());
+            return false;
         }
     }
 
-    private void declaracao() {
-
-        /*if(currentToken.tipo() == TipoToken.KEYWORD){
-            System.out.println(currentToken.lexema() + " é uma palavra chave");
-        }*/
-
-
-
-        // Declaracao -> DeclaracaoVariavel
-        if (currentToken.tipo() == TipoToken.KEYWORD && isTipo(currentToken.lexema())) {
-            eat(TipoToken.KEYWORD);
-            if (currentToken.tipo() == TipoToken.ID) {
-                eat(TipoToken.ID);
-                if (currentToken.tipo() == TipoToken.SIMBOLO_ESPECIAL && currentToken.lexema().equals(";")) {
-                    eat(TipoToken.SIMBOLO_ESPECIAL);
-                } else if (currentToken.tipo() == TipoToken.OPERADOR && currentToken.lexema().equals("=")) {
-                    eat(TipoToken.OPERADOR);
-                    expressao();
-                    eat(TipoToken.SIMBOLO_ESPECIAL);
-                }
-            }
-        } else if (currentToken.tipo() == TipoToken.COMENTARIO) {
-            eat(TipoToken.COMENTARIO);
-        } else {
-            throw new RuntimeException("Erro de sintaxe em declaração: " + currentToken.lexema());
+    private void programa() throws Exception {
+        while (proximoToken().tipo() != TipoToken.EOF) {
+            analisarDeclaracao();
         }
     }
 
-    private boolean isTipo(String lexema) {
-        return lexema.equals("int") || lexema.equals("float") || lexema.equals("double") || lexema.equals("char") || lexema.equals("boolean") || lexema.equals("main");
-    }
-
-    private void expressao() {
-        atribuicao();
-    }
-
-    private void atribuicao() {
-        if (currentToken.tipo() == TipoToken.ID) {
-            eat(TipoToken.ID);
-            if (currentToken.tipo() == TipoToken.OPERADOR) {
-                eat(TipoToken.OPERADOR);
-                expressao();
-            }
-        } else {
-            throw new RuntimeException("Erro de sintaxe em atribuição: " + currentToken.lexema());
-        }
-    }
-
-    private void getNext(){
-        currentToken = lista.get(i++);
+    private void analisarDeclaracao() throws Exception {
+        // aqui é onde sera implementado aquela logica do ANTLR
     }
 }
