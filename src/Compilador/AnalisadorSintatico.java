@@ -105,24 +105,129 @@ public class AnalisadorSintatico {
     }
 
     // metodos de verificações que precisa implementar
-    private void analisarComentario() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'analisarComentario'");
+    private void analisarComentario() throws Exception {
+       conferir(TipoToken.COMENTARIO);
     }
 
-    private void analisarDeclaracaoFuncao() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'analisarDeclaracaoFuncao'");
+   
+
+    private void analisarBloco() throws Exception {
+        conferir(TipoToken.SIMBOLO_ESPECIAL); // '{'
+        while (proximoToken().tipo() != TipoToken.SIMBOLO_ESPECIAL) {
+            analisarDeclaracao();
+        }
+        conferir(TipoToken.SIMBOLO_ESPECIAL); // '}'
     }
 
-    private void analisarEstruturaControle() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'analisarEstruturaControle'");
+
+    private void analisarParametro() throws Exception {
+        tipo();
+        conferir(TipoToken.ID);
+        if (proximoToken().lexema().equals("[")) {
+            conferir(TipoToken.SIMBOLO_ESPECIAL);
+            conferir(TipoToken.SIMBOLO_ESPECIAL); // ']'
+        }
     }
 
-    private void analisarDeclaracaoEstrutura() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'analisarDeclaracaoEstrutura'");
+    private void analisarDeclaracaoFuncao() throws Exception {
+        tipo();
+        conferir(TipoToken.ID);
+        conferir(TipoToken.SIMBOLO_ESPECIAL); // '('
+        if (proximoToken().tipo() != TipoToken.SIMBOLO_ESPECIAL) {
+            analisarParametros();
+        }
+        conferir(TipoToken.SIMBOLO_ESPECIAL); // ')'
+        analisarBloco();
+    }
+
+    private void analisarParametros() throws Exception {
+        analisarParametro();
+        while (proximoToken().lexema().equals(",")) {
+            conferir(TipoToken.OPERADOR);
+            analisarParametro();
+        }
+    }
+
+    // aqui pedi uma ajudinha para ter como base ñ sei se está completo ou incorreto verificar com atenção
+
+    private void analisarEstruturaControle() throws Exception {
+        String lexema = proximoToken().lexema();
+        if (lexema.equals("if")) {
+            conferir(TipoToken.KEYWORD);
+            conferir(TipoToken.SIMBOLO_ESPECIAL); // '('
+            analisarExpressao();
+            conferir(TipoToken.SIMBOLO_ESPECIAL); // ')'
+            analisarBloco();
+            if (proximoToken().lexema().equals("else")) {
+                conferir(TipoToken.KEYWORD);
+                analisarBloco();
+            }
+        } else if (lexema.equals("while")) {
+            conferir(TipoToken.KEYWORD);
+            conferir(TipoToken.SIMBOLO_ESPECIAL); // '('
+            analisarExpressao();
+            conferir(TipoToken.SIMBOLO_ESPECIAL); // ')'
+            analisarBloco();
+        } else if (lexema.equals("for")) {
+            conferir(TipoToken.KEYWORD);
+            conferir(TipoToken.SIMBOLO_ESPECIAL); // '('
+            analisarExpressao();
+            conferir(TipoToken.SIMBOLO_ESPECIAL); // ';'
+            analisarExpressao();
+            conferir(TipoToken.SIMBOLO_ESPECIAL); // ';'
+            analisarExpressao();
+            conferir(TipoToken.SIMBOLO_ESPECIAL); // ')'
+            analisarBloco();
+        } else if (lexema.equals("switch")) {
+            conferir(TipoToken.KEYWORD);
+            conferir(TipoToken.SIMBOLO_ESPECIAL); // '('
+            analisarExpressao();
+            conferir(TipoToken.SIMBOLO_ESPECIAL); // ')'
+            analisarListaCase();
+        } else if (lexema.equals("break")) {
+            conferir(TipoToken.KEYWORD);
+            conferir(TipoToken.SIMBOLO_ESPECIAL); // ';'
+        } else if (lexema.equals("continue")) {
+            conferir(TipoToken.KEYWORD);
+            conferir(TipoToken.SIMBOLO_ESPECIAL); // ';'
+        } else if (lexema.equals("return")) {
+            conferir(TipoToken.KEYWORD);
+            analisarExpressao();
+            conferir(TipoToken.SIMBOLO_ESPECIAL); // ';'
+        } else {
+            throw new Exception("Estrutura de controle desconhecida: " + lexema);
+        }
+    }
+
+    private void analisarListaCase() throws Exception {
+        while (proximoToken().lexema().equals("case") || proximoToken().lexema().equals("default")) {
+            analisarDeclaracaoCase();
+        }
+    } 
+    private void analisarDeclaracaoCase() throws Exception {
+        if (proximoToken().lexema().equals("case")) {
+            conferir(TipoToken.KEYWORD);
+            analisarExpressao();
+            conferir(TipoToken.SIMBOLO_ESPECIAL); // ':'
+            analisarBloco();
+        } else if (proximoToken().lexema().equals("default")) {
+            conferir(TipoToken.KEYWORD);
+            conferir(TipoToken.SIMBOLO_ESPECIAL); // ':'
+            analisarBloco();
+        } else {
+            throw new Exception("Declaração de case desconhecida: " + proximoToken().lexema());
+        }
+    }
+
+    private void analisarDeclaracaoEstrutura() throws Exception {
+        conferir(TipoToken.KEYWORD); // 'struct'
+        conferir(TipoToken.ID);
+        conferir(TipoToken.SIMBOLO_ESPECIAL); // '{'
+        while (proximoToken().tipo() == TipoToken.KEYWORD) {
+            analisarDeclaracaoVariavel();
+        }
+        conferir(TipoToken.SIMBOLO_ESPECIAL); // '}'
+        conferir(TipoToken.SIMBOLO_ESPECIAL); // ';'
     }
         
     
