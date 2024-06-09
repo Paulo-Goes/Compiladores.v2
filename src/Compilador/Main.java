@@ -25,7 +25,6 @@ public class Main {
     private static final String time = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yy hh-mm-ss"));
     private static final File desktopFolder = new File(FileSystemView.getFileSystemView().getHomeDirectory().toString(), "Compiladores");
     private static final File runFolder = new File(desktopFolder, "Compilação - " + time);
-    private static final boolean
 
     public static void main(String[] args) throws IOException, InterruptedException, AWTException {
         File pastaCodigos = new File("src/codes");
