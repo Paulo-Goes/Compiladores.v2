@@ -1,10 +1,15 @@
 package Compilador;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class AnalisadorSintatico {
-   
+
+    /*
+    * Para o codeC.txt, só existem 2 erros, o char mensagem[] dá erro no '[' (analisarDeclaraçãoVariável) e
+    * o println(d) dá erro no '(' (problema deve estar na verificação do TipoToken em analisarDeclaração)
+    */
+
     private final List<Token> tokens;
     private int posicaoAtual = 0;
 
@@ -31,10 +36,10 @@ public class AnalisadorSintatico {
         try {
             // Inicia a análise sintática a partir do ponto de entrada da gramática
             programa();
-            
+
             // Verifica se o final do arquivo foi alcançado
             conferir(TipoToken.EOF);
-            
+
             // Se tudo estiver correto até aqui, retorna verdadeiro
             return true;
         } catch (Exception e) {
@@ -55,6 +60,12 @@ public class AnalisadorSintatico {
     }
 
     private void analisarDeclaracaoVariavel() throws Exception {
+        /* Erro aqui
+        * char mensagem[] = "Olá, mundo!";
+        * Após verificar que mensagem é ID
+        * É possível ver que '[' não é '=', fazendo com que a declaração de variável termine de forma prematura
+        * Todo: Implementar condição para arrays e matrizes
+        */
         tipo();
         conferir(TipoToken.ID);
         if (proximoToken().lexema().equals("=")) {
@@ -66,9 +77,9 @@ public class AnalisadorSintatico {
 
     private void analisarExpressao() throws Exception {
 
-        if (proximoToken().tipo() == TipoToken.ID) { 
+        if (proximoToken().tipo() == TipoToken.ID) {
             conferir(TipoToken.ID);
-            if (proximoToken().lexema().equals("=") || proximoToken().lexema().matches("[+\\-*/%&|]=")) {
+            if (proximoToken().lexema().equals("=") || proximoToken().lexema().matches("=|\\+|-|\\*|/|%|&&|!|>|<|>=|<=|!=|==")) {
                 conferir(TipoToken.OPERADOR);
                 analisarExpressao();
             }
@@ -78,21 +89,25 @@ public class AnalisadorSintatico {
             throw new Exception("Erro de sintaxe na expressão: " + proximoToken().lexema());
         }
     }
-    
+
 
     private void analisarDeclaracao() throws Exception {
         // aqui é onde sera implementado aquela logica do ANTLR  
         if (proximoToken().tipo() == TipoToken.KEYWORD) {
             String lexema = proximoToken().lexema();
             if (lexema.equals("int") || lexema.equals("float") || lexema.equals("double") ||
-                lexema.equals("char") || lexema.equals("boolean") || lexema.equals("vet")) {
-                analisarDeclaracaoVariavel();
-            }else if (lexema.equals("struct")) {
+                    lexema.equals("char") || lexema.equals("boolean") || lexema.equals("vet")) {
+                if (Objects.equals(tokens.get(posicaoAtual + 1).lexema(), "main")) {
+                    analisarDeclaracaoFuncao();
+                } else {
+                    analisarDeclaracaoVariavel();
+                }
+            } else if (lexema.equals("struct")) {
                 analisarDeclaracaoEstrutura();
             } else if (lexema.equals("if") || lexema.equals("while") || lexema.equals("for") ||
-                       lexema.equals("switch") || lexema.equals("break") || lexema.equals("continue") ||
-                       lexema.equals("return")) {
-                    analisarEstruturaControle();
+                    lexema.equals("switch") || lexema.equals("break") || lexema.equals("continue") ||
+                    lexema.equals("return")) {
+                analisarEstruturaControle();
             } else {
                 analisarDeclaracaoFuncao();
             }
@@ -106,10 +121,9 @@ public class AnalisadorSintatico {
 
     // metodos de verificações que precisa implementar
     private void analisarComentario() throws Exception {
-       conferir(TipoToken.COMENTARIO);
+        conferir(TipoToken.COMENTARIO);
     }
 
-   
 
     private void analisarBloco() throws Exception {
         conferir(TipoToken.SIMBOLO_ESPECIAL); // '{'
@@ -131,7 +145,11 @@ public class AnalisadorSintatico {
 
     private void analisarDeclaracaoFuncao() throws Exception {
         tipo();
-        conferir(TipoToken.ID);
+        if (Objects.equals(proximoToken().lexema(), "main")) {
+            tipo();
+        } else {
+            conferir(TipoToken.ID);
+        }
         conferir(TipoToken.SIMBOLO_ESPECIAL); // '('
         if (proximoToken().tipo() != TipoToken.SIMBOLO_ESPECIAL) {
             analisarParametros();
@@ -203,7 +221,8 @@ public class AnalisadorSintatico {
         while (proximoToken().lexema().equals("case") || proximoToken().lexema().equals("default")) {
             analisarDeclaracaoCase();
         }
-    } 
+    }
+
     private void analisarDeclaracaoCase() throws Exception {
         if (proximoToken().lexema().equals("case")) {
             conferir(TipoToken.KEYWORD);
@@ -229,6 +248,4 @@ public class AnalisadorSintatico {
         conferir(TipoToken.SIMBOLO_ESPECIAL); // '}'
         conferir(TipoToken.SIMBOLO_ESPECIAL); // ';'
     }
-        
-    
 }

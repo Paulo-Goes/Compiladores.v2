@@ -25,34 +25,43 @@ public class Main {
     private static final String time = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yy hh-mm-ss"));
     private static final File desktopFolder = new File(FileSystemView.getFileSystemView().getHomeDirectory().toString(), "Compiladores");
     private static final File runFolder = new File(desktopFolder, "Compilação - " + time);
+    private static final boolean
 
     public static void main(String[] args) throws IOException, InterruptedException, AWTException {
         File pastaCodigos = new File("src/codes");
         File[] codigos = pastaCodigos.listFiles((dir, name) -> name.toLowerCase().endsWith(".txt"));
 
-        for(int i = 0; i < Objects.requireNonNull(codigos).length; i++){
-            System.out.println((i + 1) +": "+ codigos[i].getName());
+        //1 = true, 0 = false
+        System.out.println("Criar pasta e arquivos de saída? 1/0 (true/false)");
+
+        //Se a entrada do scanner for 1, então ele cria os arquivos na pasta na área de trabalho
+        boolean criar = new Scanner(System.in).nextInt() == 1;
+
+        for (int i = 0; i < Objects.requireNonNull(codigos).length; i++) {
+            System.out.println((i + 1) + ": " + codigos[i].getName());
         }
 
         System.out.println("Qual código quer rodar?");
 
         int sel = new Scanner(System.in).nextInt() - 1;
 
-        createFolder();
-
         PreProcessamento separador = new PreProcessamento(codigos[sel].toString()); //Pre processamento para a análise léxica
-
-        writePreProcess(separador.getListaString());
 
         AnalisadorLexico lexico = new AnalisadorLexico();
         lexico.identificador(separador.getListaString()); //Análise léxica é feita
 
-        writeLexic(lexico.getListaToken(), lexico.getListaSimbolos());
+        AnalisadorSintatico sintatico = new AnalisadorSintatico(lexico.getListaToken());
 
-        /*AnalisadorSintatico sintatico = new AnalisadorSintatico(lexico.getListaToken());
-        sintatico.parse();*/
+        if(sintatico.analisar()){
+            System.out.println(codigos[sel].getName() + " foi analisado com sucesso!");
+        }
 
-        showFolder();
+        if (criar) {
+            createFolder();
+            writePreProcess(separador.getListaString());
+            writeLexic(lexico.getListaToken(), lexico.getListaSimbolos());
+            showFolder();
+        }
     }
 
     private static void writePreProcess(ArrayList<String> listaString) throws IOException {
@@ -60,7 +69,7 @@ public class Main {
 
         b.write("Pre-processado\n\n");
 
-        for(String s : listaString){
+        for (String s : listaString) {
             b.write(s + "\n");
         }
 
@@ -72,7 +81,7 @@ public class Main {
 
         bwT.write("Analise Léxica - Tokens\n\n");
 
-        for(Token t : tokens){
+        for (Token t : tokens) {
             bwT.write(t + "\n");
         }
 
@@ -83,7 +92,7 @@ public class Main {
         bwS.write("Analise Léxica - Símbolos\n\n");
 
         int i = 0;
-        for(Token t : simbolos){
+        for (Token t : simbolos) {
             bwS.write(i + ": " + t + "\n");
             i++;
         }
@@ -124,13 +133,13 @@ public class Main {
     private static ProcessBuilder getProcessBuilder(String so) {
         ProcessBuilder pb;
 
-        if(so.contains("win")){
+        if (so.contains("win")) {
             pb = new ProcessBuilder("explorer.exe", runFolder.getAbsolutePath());
-        }else if(so.contains("mac")){
+        } else if (so.contains("mac")) {
             pb = new ProcessBuilder("open", runFolder.getAbsolutePath());
-        }else if(so.contains("nix") || so.contains("nux")){
+        } else if (so.contains("nix") || so.contains("nux")) {
             pb = new ProcessBuilder("xdg-open", runFolder.getAbsolutePath());
-        }else{
+        } else {
             throw new UnsupportedOperationException("Sistema operacional não suportado: " + so);
         }
         return pb;

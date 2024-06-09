@@ -3,7 +3,7 @@ package Compilador;
 public enum TipoToken {
     NUM,
     NUM_DEC,
-    ID,
+    ID, //Identificador
     KEYWORD, //Palavra reservada
     TXT,
     OPERADOR,
