@@ -36,6 +36,12 @@ public class Main {
         //Se a entrada do scanner for 1, então ele cria os arquivos na pasta na área de trabalho
         boolean criar = new Scanner(System.in).nextInt() == 1;
 
+        if(criar){
+            System.out.println("Arquivos de saída serão criados após a execução completa desse código.");
+        }else{
+            System.out.println("Arquivos de saída não serão criados.");
+        }
+
         for (int i = 0; i < Objects.requireNonNull(codigos).length; i++) {
             System.out.println((i + 1) + ": " + codigos[i].getName());
         }
@@ -53,6 +59,8 @@ public class Main {
 
         if(sintatico.analisar()){
             System.out.println(codigos[sel].getName() + " foi analisado com sucesso!");
+        }else{
+            System.out.println(codigos[sel].getName() + " não foi analisado com sucesso.");
         }
 
         if (criar) {
