@@ -1,14 +1,14 @@
 package Compilador;
 
 public enum TipoToken {
-    NUM,
-    NUM_DEC,
-    ID, //Identificador
+    NUM, //Números inteiros
+    NUM_DEC, //Números decimais
+    ID, //identificadores
     KEYWORD, //Palavra reservada
-    TXT,
-    OPERADOR,
-    SIMBOLO_ESPECIAL,
-    COMENTARIO,
-    INVALIDO,
+    TXT, //Texto
+    OPERADOR, //Operadores
+    SIMBOLO_ESPECIAL, //Símbolos especiais como ';' '{' '}' etc...
+    COMENTARIO, //Comentários
+    INVALIDO, //Nenhum dos tipos acima
     EOF //End of file (Fim do arquivo)
 }

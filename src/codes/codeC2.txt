@@ -1,0 +1,11 @@
+int main(){
+    float a = bomDia(10.3, 1);
+
+    println(a);
+
+    return 0;
+}
+
+float bomDia(float valor, int numero){
+    return valor + numero;
+}
