@@ -1,0 +1,22 @@
+int main(){
+    int a = 50;
+    int b = 45;
+
+    int c = a - b;
+
+    float d = a / c;
+
+    char mensagem[] = "Olá, mundo!";
+
+    //Comentário
+
+    /*
+    Comentário que faz um comentário sobre o comentário
+
+    Esse comentário é de fato um comentário de várias linhas!
+    */
+
+    println(d);
+
+    return 0;
+}
