@@ -6,9 +6,9 @@ import java.util.Objects;
 public class AnalisadorSintatico {
 
     /*
-    * Para o codeC.txt, só existem 2 erros, o char mensagem[] dá erro no '[' (analisarDeclaraçãoVariável) e
-    * o println(d) dá erro no '(' (problema deve estar na verificação do TipoToken em analisarDeclaração)
-    */
+     * Para o codeC.txt, só existem 2 erros, o char mensagem[] dá erro no '[' (analisarDeclaraçãoVariável) e
+     * o println(d) dá erro no '(' (problema deve estar na verificação do TipoToken em analisarDeclaração)
+     */
 
     private final List<Token> tokens;
     private int posicaoAtual = 0;
@@ -61,11 +61,11 @@ public class AnalisadorSintatico {
 
     private void analisarDeclaracaoVariavel() throws Exception {
         /* Erro aqui
-        * char mensagem[] = "Olá, mundo!";
-        * Após verificar que mensagem é ID
-        * É possível ver que '[' não é '=', fazendo com que a declaração de variável termine de forma prematura
-        * Todo: Implementar condição para arrays e matrizes
-        */
+         * char mensagem[] = "Olá, mundo!";
+         * Após verificar que mensagem é ID
+         * É possível ver que '[' não é '=', fazendo com que a declaração de variável termine de forma prematura
+         * Todo: Implementar condição para arrays e matrizes
+         */
         tipo();
         conferir(TipoToken.ID);
         if (proximoToken().lexema().equals("=")) {
@@ -95,21 +95,18 @@ public class AnalisadorSintatico {
         // aqui é onde sera implementado aquela logica do ANTLR  
         if (proximoToken().tipo() == TipoToken.KEYWORD) {
             String lexema = proximoToken().lexema();
-            if (lexema.equals("int") || lexema.equals("float") || lexema.equals("double") ||
-                    lexema.equals("char") || lexema.equals("boolean") || lexema.equals("vet")) {
-                if (Objects.equals(tokens.get(posicaoAtual + 1).lexema(), "main")) {
-                    analisarDeclaracaoFuncao();
-                } else {
-                    analisarDeclaracaoVariavel();
+            switch (lexema) {
+                case "int", "float", "double", "char", "boolean", "vet" -> {
+                    if (Objects.equals(tokens.get(posicaoAtual + 1).lexema(), "main")) {
+                        analisarDeclaracaoFuncao();
+                    } else {
+                        analisarDeclaracaoVariavel();
+                    }
                 }
-            } else if (lexema.equals("struct")) {
-                analisarDeclaracaoEstrutura();
-            } else if (lexema.equals("if") || lexema.equals("while") || lexema.equals("for") ||
-                    lexema.equals("switch") || lexema.equals("break") || lexema.equals("continue") ||
-                    lexema.equals("return")) {
-                analisarEstruturaControle();
-            } else {
-                analisarDeclaracaoFuncao();
+                case "struct" -> analisarDeclaracaoEstrutura();
+                case "if", "while", "for", "switch", "break", "continue", "return" -> analisarEstruturaControle();
+                case "println" -> analisarDeclaracaoPrintln();
+                default -> analisarDeclaracaoFuncao();
             }
         } else if (proximoToken().tipo() == TipoToken.COMENTARIO) {
             analisarComentario();
@@ -143,6 +140,25 @@ public class AnalisadorSintatico {
         }
     }
 
+    private void analisarDeclaracaoPrintln() throws Exception {
+        tipo();
+        if (Objects.equals(proximoToken().lexema(), "(")) {
+            conferir(TipoToken.SIMBOLO_ESPECIAL);
+            if (proximoToken().tipo() == TipoToken.ID) {
+                conferir(TipoToken.ID);
+            } else {
+                conferir(TipoToken.TXT);
+            }
+
+            if (Objects.equals(proximoToken().lexema(), ")")) {
+                conferir(TipoToken.SIMBOLO_ESPECIAL);
+            }
+            if(Objects.equals(proximoToken().lexema(), ";")){
+                conferir(TipoToken.SIMBOLO_ESPECIAL);
+            }
+        }
+    }
+
     private void analisarDeclaracaoFuncao() throws Exception {
         tipo();
         if (Objects.equals(proximoToken().lexema(), "main")) {
@@ -170,50 +186,63 @@ public class AnalisadorSintatico {
 
     private void analisarEstruturaControle() throws Exception {
         String lexema = proximoToken().lexema();
-        if (lexema.equals("if")) {
-            conferir(TipoToken.KEYWORD);
-            conferir(TipoToken.SIMBOLO_ESPECIAL); // '('
-            analisarExpressao();
-            conferir(TipoToken.SIMBOLO_ESPECIAL); // ')'
-            analisarBloco();
-            if (proximoToken().lexema().equals("else")) {
+        switch (lexema) {
+            case "if" -> {
                 conferir(TipoToken.KEYWORD);
+                conferir(TipoToken.SIMBOLO_ESPECIAL); // '('
+
+                analisarExpressao();
+                conferir(TipoToken.SIMBOLO_ESPECIAL); // ')'
+
+                analisarBloco();
+                if (proximoToken().lexema().equals("else")) {
+                    conferir(TipoToken.KEYWORD);
+                    analisarBloco();
+                }
+            }
+            case "while" -> {
+                conferir(TipoToken.KEYWORD);
+                conferir(TipoToken.SIMBOLO_ESPECIAL); // '('
+
+                analisarExpressao();
+                conferir(TipoToken.SIMBOLO_ESPECIAL); // ')'
+
                 analisarBloco();
             }
-        } else if (lexema.equals("while")) {
-            conferir(TipoToken.KEYWORD);
-            conferir(TipoToken.SIMBOLO_ESPECIAL); // '('
-            analisarExpressao();
-            conferir(TipoToken.SIMBOLO_ESPECIAL); // ')'
-            analisarBloco();
-        } else if (lexema.equals("for")) {
-            conferir(TipoToken.KEYWORD);
-            conferir(TipoToken.SIMBOLO_ESPECIAL); // '('
-            analisarExpressao();
-            conferir(TipoToken.SIMBOLO_ESPECIAL); // ';'
-            analisarExpressao();
-            conferir(TipoToken.SIMBOLO_ESPECIAL); // ';'
-            analisarExpressao();
-            conferir(TipoToken.SIMBOLO_ESPECIAL); // ')'
-            analisarBloco();
-        } else if (lexema.equals("switch")) {
-            conferir(TipoToken.KEYWORD);
-            conferir(TipoToken.SIMBOLO_ESPECIAL); // '('
-            analisarExpressao();
-            conferir(TipoToken.SIMBOLO_ESPECIAL); // ')'
-            analisarListaCase();
-        } else if (lexema.equals("break")) {
-            conferir(TipoToken.KEYWORD);
-            conferir(TipoToken.SIMBOLO_ESPECIAL); // ';'
-        } else if (lexema.equals("continue")) {
-            conferir(TipoToken.KEYWORD);
-            conferir(TipoToken.SIMBOLO_ESPECIAL); // ';'
-        } else if (lexema.equals("return")) {
-            conferir(TipoToken.KEYWORD);
-            analisarExpressao();
-            conferir(TipoToken.SIMBOLO_ESPECIAL); // ';'
-        } else {
-            throw new Exception("Estrutura de controle desconhecida: " + lexema);
+            case "for" -> {
+                conferir(TipoToken.KEYWORD);
+                conferir(TipoToken.SIMBOLO_ESPECIAL); // '('
+
+                analisarExpressao();
+                conferir(TipoToken.SIMBOLO_ESPECIAL); // ';'
+
+                analisarExpressao();
+                conferir(TipoToken.SIMBOLO_ESPECIAL); // ';'
+
+                analisarExpressao();
+                conferir(TipoToken.SIMBOLO_ESPECIAL); // ')'
+
+                analisarBloco();
+            }
+            case "switch" -> {
+                conferir(TipoToken.KEYWORD);
+                conferir(TipoToken.SIMBOLO_ESPECIAL); // '('
+
+                analisarExpressao();
+                conferir(TipoToken.SIMBOLO_ESPECIAL); // ')'
+
+                analisarListaCase();
+            }
+            case "break", "continue" -> {
+                conferir(TipoToken.KEYWORD);
+                conferir(TipoToken.SIMBOLO_ESPECIAL); // ';'
+            }
+            case "return" -> {
+                conferir(TipoToken.KEYWORD);
+                analisarExpressao();
+                conferir(TipoToken.SIMBOLO_ESPECIAL); // ';'
+            }
+            default -> throw new Exception("Estrutura de controle desconhecida: " + lexema);
         }
     }
 

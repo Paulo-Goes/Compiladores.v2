@@ -6,7 +6,7 @@ int main(){
 
     float d = a / c;
 
-    char mensagem[] = "Olá, mundo!";
+    //char mensagem[] = "Olá, mundo!";
 
     //Comentário
 
