@@ -8,7 +8,11 @@ declarar : declararVAR | declararFunc | declararEstruct | coment | arrayIniciali
 
 declararVAR : type * ID ';'| type  ID  '='  expressao  ';' | type ID '[' ']' ';' | type ID '[' ']' '=' expressao ';'; // Aq eu vou declarar uma váriavel, exemplos: Int i; OU Int i = 0;
 
-declararPrintln : 'println' '(' ((ID | TEXTO) + ('+' (ID | TEXTO)*)) ')' ';' | 'println' '(' TEXTO ')' ';';
+declararPrintln : 'println' '(' expr ')'';';
+
+expr : termo ('+' termo)*;
+
+termo : ID | TEXTO;
 
 type : 'int' | 'float' | 'double' | 'char' | 'boolean' | 'vet' | 'void'; // Aq são os tipos das váriaveis
 
